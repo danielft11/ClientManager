@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
+using ClientManagerBackend.Aplicacao.DTOs;
 using ClientManagerBackend.Aplicacao.Interfaces;
 using ClientManagerBackend.Dominio.Entidades;
 using ClientManagerBackend.Dominio.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ClientManagerBackend.Aplicacao.Servicos
@@ -21,29 +19,82 @@ namespace ClientManagerBackend.Aplicacao.Servicos
             _mapper = mapper;
         }
 
-        public async Task<IList<Cliente>> ObterClientesAsync()
+        public async Task<IList<ClienteDTO>> ObterClientesAsync()
         {
-            throw new NotImplementedException();
+            var clientes = await _clienteRepositorio.ObterClientesAsync();
+            return _mapper.Map<List<ClienteDTO>>(clientes);
         }
-        
-        public async Task<Cliente> ObterClientePeloCPF(string cpf)
+
+        public async Task<ClienteDTO> ObterClientePeloCPF(string cpf)
         {
-            throw new NotImplementedException();
+            var cliente = await _clienteRepositorio.ObterClientePeloCPF(cpf);
+            return _mapper.Map<ClienteDTO>(cliente);
         }
-        
-        public async Task<Cliente> CadastrarClienteAsync(Cliente cliente)
+
+        public async Task<StatusResponseDTO> CadastrarClienteAsync(ClienteDTO clienteDTO)
         {
-            throw new NotImplementedException();
+            var clienteJaExiste = await _clienteRepositorio.ObterClientePeloCPF(clienteDTO.Cpf);
+
+            if (clienteJaExiste is not null)
+                return new StatusResponseDTO()
+                {
+                    Status = "Erro",
+                    Mensagem = "Já existe um cliente no banco de dados cadastrado com este CPF."
+                };
+
+            var cliente = _mapper.Map<Cliente>(clienteDTO);
+
+            await _clienteRepositorio.CadastrarClienteAsync(cliente);
+
+            return new StatusResponseDTO()
+            {
+                Status = "Sucesso",
+                Mensagem = "Cliente cadastrado com sucesso!"
+            };
         }
-        
-        public async Task<Cliente> AtualizarClienteAsync(Cliente cliente)
+
+        public async Task<StatusResponseDTO> AtualizarClienteAsync(ClienteDTO clienteDTO)
         {
-            throw new NotImplementedException();
+            var cliente = await _clienteRepositorio.ObterClientePeloCPF(clienteDTO.Cpf);
+
+            if (cliente is null)
+                return new StatusResponseDTO()
+                {
+                    Status = "Erro",
+                    Mensagem = "Nenhum cliente com este CPF foi encontrado na nossa base de dados."
+                };
+
+            var clienteAlterar = _mapper.Map<Cliente>(clienteDTO);
+
+            await _clienteRepositorio.AtualizarClienteAsync(clienteAlterar);
+
+            return new StatusResponseDTO()
+            {
+                Status = "Sucesso!",
+                Mensagem = "Cliente alterado com sucesso."
+            };
         }
-        
-        public async Task<Cliente> DeletarClienteAsync(Cliente cliente)
+
+        public async Task<StatusResponseDTO> DeletarClienteAsync(string cpf)
         {
-            throw new NotImplementedException();
+            var cliente = await _clienteRepositorio.ObterClientePeloCPF(cpf);
+
+            if (cliente is null)
+                return new StatusResponseDTO()
+                {
+                    Status = "Erro",
+                    Mensagem = "Nenhum cliente com este CPF foi encontrado na nossa base de dados."
+                };
+
+            await _clienteRepositorio.DeletarClienteAsync(cliente);
+
+            return new StatusResponseDTO()
+            {
+                Status = "Sucesso!",
+                Mensagem = "Cliente removido com sucesso."
+            };
         }
+
     }
+
 }

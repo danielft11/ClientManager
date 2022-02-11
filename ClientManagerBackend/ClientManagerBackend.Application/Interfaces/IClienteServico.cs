@@ -1,4 +1,4 @@
-﻿using ClientManagerBackend.Dominio.Entidades;
+﻿using ClientManagerBackend.Aplicacao.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,14 +6,14 @@ namespace ClientManagerBackend.Aplicacao.Interfaces
 {
     public interface IClienteServico
     {
-        Task<IList<Cliente>> ObterClientesAsync();
+        Task<IList<ClienteDTO>> ObterClientesAsync();
 
-        Task<Cliente> ObterClientePeloCPF(string cpf);
+        Task<ClienteDTO> ObterClientePeloCPF(string cpf);
 
-        Task<Cliente> CadastrarClienteAsync(Cliente cliente);
+        Task<StatusResponseDTO> CadastrarClienteAsync(ClienteDTO cliente);
 
-        Task<Cliente> AtualizarClienteAsync(Cliente cliente);
+        Task<StatusResponseDTO> AtualizarClienteAsync(ClienteDTO cliente);
 
-        Task<Cliente> DeletarClienteAsync(Cliente cliente);
+        Task<StatusResponseDTO> DeletarClienteAsync(string cpf);
     }
 }

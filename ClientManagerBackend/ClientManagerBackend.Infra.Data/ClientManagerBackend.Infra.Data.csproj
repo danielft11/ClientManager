@@ -12,4 +12,8 @@
     <ProjectReference Include="..\ClientManagerBackend.Domain\ClientManagerBackend.Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Seed\" />
+  </ItemGroup>
+
 </Project>

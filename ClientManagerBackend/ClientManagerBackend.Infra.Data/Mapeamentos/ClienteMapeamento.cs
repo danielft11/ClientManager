@@ -1,6 +1,8 @@
 ﻿using ClientManagerBackend.Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
 
 namespace ClientManagerBackend.Infra.Data.Mapeamentos
 {
@@ -34,4 +36,5 @@ namespace ClientManagerBackend.Infra.Data.Mapeamentos
         }
 
     }
+
 }
