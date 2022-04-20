@@ -22,6 +22,19 @@ namespace ClientManagerBackend.Api
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: "CorsPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
             #region Injeções de dependência
             services.AdicionarContextoDB();
 
@@ -52,6 +65,8 @@ namespace ClientManagerBackend.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(policyName: "CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
