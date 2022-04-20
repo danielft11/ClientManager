@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "ClientManagerBackend.Grpc";
+
+package cliente;
+
+service Cliente {
+  rpc AddCliente (AddClienteRequest) returns (AddClienteResponse);
+}
+
+message AddClienteRequest {
+    string nome = 1;
+    string cpf = 2;
+    string telefone = 3;
+    string email = 4;
+    string data_nascimento = 5;
+}
+
+message AddClienteResponse {
+    string message = 1;
+}
+

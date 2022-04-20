@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Dominio", "ClientManagerBackend.Domain\ClientManagerBackend.Dominio.csproj", "{389B993A-C86A-4F73-9DE3-F0DCF8DFC264}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientManagerBackend.Dominio", "ClientManagerBackend.Domain\ClientManagerBackend.Dominio.csproj", "{389B993A-C86A-4F73-9DE3-F0DCF8DFC264}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Aplicacao", "ClientManagerBackend.Application\ClientManagerBackend.Aplicacao.csproj", "{78A08FBA-5B2E-4CBD-9891-97919A76C5B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientManagerBackend.Aplicacao", "ClientManagerBackend.Application\ClientManagerBackend.Aplicacao.csproj", "{78A08FBA-5B2E-4CBD-9891-97919A76C5B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Infra.Data", "ClientManagerBackend.Infra.Data\ClientManagerBackend.Infra.Data.csproj", "{18EF537D-F804-4607-A417-868B43D60D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientManagerBackend.Infra.Data", "ClientManagerBackend.Infra.Data\ClientManagerBackend.Infra.Data.csproj", "{18EF537D-F804-4607-A417-868B43D60D00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Infra.IoC", "ClientManagerBackend.Infra.IoC\ClientManagerBackend.Infra.IoC.csproj", "{92A003BC-815E-44BF-BB53-65376DEDD4B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientManagerBackend.Infra.IoC", "ClientManagerBackend.Infra.IoC\ClientManagerBackend.Infra.IoC.csproj", "{92A003BC-815E-44BF-BB53-65376DEDD4B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Testes", "ClientManagerBackend.Tests\ClientManagerBackend.Testes.csproj", "{29C935DF-3E76-4B81-A37E-D6F285F54BC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientManagerBackend.Testes", "ClientManagerBackend.Tests\ClientManagerBackend.Testes.csproj", "{29C935DF-3E76-4B81-A37E-D6F285F54BC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Api", "ClientManagerBackend.Api\ClientManagerBackend.Api.csproj", "{E636C2D0-2360-44CE-8D17-A413720EF0E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientManagerBackend.Api", "ClientManagerBackend.Api\ClientManagerBackend.Api.csproj", "{E636C2D0-2360-44CE-8D17-A413720EF0E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientManagerBackend.Grpc", "ClientManagerBackend.Grpc\ClientManagerBackend.Grpc.csproj", "{B823BB98-A696-4198-A7B4-2432ED660BAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{E636C2D0-2360-44CE-8D17-A413720EF0E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E636C2D0-2360-44CE-8D17-A413720EF0E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E636C2D0-2360-44CE-8D17-A413720EF0E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B823BB98-A696-4198-A7B4-2432ED660BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B823BB98-A696-4198-A7B4-2432ED660BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B823BB98-A696-4198-A7B4-2432ED660BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B823BB98-A696-4198-A7B4-2432ED660BAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
