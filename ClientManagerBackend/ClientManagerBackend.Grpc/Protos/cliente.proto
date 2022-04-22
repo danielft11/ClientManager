@@ -6,6 +6,7 @@ package cliente;
 
 service Cliente {
   rpc AddCliente (AddClienteRequest) returns (AddClienteResponse);
+  rpc GetClientesByStream (GetClientesRequest) returns (stream ClienteLookupModel);
 }
 
 message AddClienteRequest {
@@ -18,5 +19,15 @@ message AddClienteRequest {
 
 message AddClienteResponse {
     string message = 1;
+}
+
+message GetClientesRequest {}
+
+message ClienteLookupModel {
+    string nome = 1;
+    string cpf = 2;
+    string telefone = 3;
+    string email = 4;
+    string data_nascimento = 5;
 }
 
