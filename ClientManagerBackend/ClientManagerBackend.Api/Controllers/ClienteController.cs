@@ -2,6 +2,7 @@
 using ClientManagerBackend.Aplicacao.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,10 +13,12 @@ namespace ClientManagerBackend.Api.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly IClienteServico _clienteServico;
+        private readonly ILogger _logger;
 
-        public ClienteController(IClienteServico clienteServico)
+        public ClienteController(IClienteServico clienteServico, ILogger<ClienteController> logger)
         {
             _clienteServico = clienteServico;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -25,7 +28,19 @@ namespace ClientManagerBackend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IEnumerable<ClienteDTO>> ObterClientes() 
         {
-            return await _clienteServico.ObterClientesAsync();
+            //return await _clienteServico.ObterClientesAsync();
+            
+
+            try
+            {
+                throw new System.Exception("Ops, não foi possível prosseguir");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Seu código está bugado!");
+            }
+            
+            return null;
         }
 
         [HttpGet("{cpf}")]
