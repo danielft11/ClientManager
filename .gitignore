@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/ClientManagerBackend/ClientManagerBackend.Api/Docker/esdata/nodes/0
