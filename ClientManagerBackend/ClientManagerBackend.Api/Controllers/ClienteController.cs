@@ -22,28 +22,18 @@ namespace ClientManagerBackend.Api.Controllers
         }
 
         [HttpGet]
+        [Route("ObterClientes")]
         [ProducesResponseType(typeof(IEnumerable<ClienteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IEnumerable<ClienteDTO>> ObterClientes() 
         {
-            //return await _clienteServico.ObterClientesAsync();
-            
-
-            try
-            {
-                throw new System.Exception("Ops, não foi possível prosseguir");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError(ex, "Seu código está bugado!");
-            }
-            
-            return null;
+            return await _clienteServico.ObterClientesAsync();
         }
 
-        [HttpGet("{cpf}")]
+        [HttpGet]
+        [Route("ObterClientePeloCPF/{cpf}")]
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -53,6 +43,7 @@ namespace ClientManagerBackend.Api.Controllers
         }
 
         [HttpPost]
+        [Route("CadastrarCliente")]
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(StatusResponseDTO), StatusCodes.Status400BadRequest)]
         public async Task<StatusResponseDTO> CadastrarCliente([FromBody] ClienteDTO clienteDTO)
@@ -61,6 +52,7 @@ namespace ClientManagerBackend.Api.Controllers
         }
 
         [HttpPut]
+        [Route("AtualizarCliente")]
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(StatusResponseDTO), StatusCodes.Status404NotFound)]
         public async Task<StatusResponseDTO> AtualizarCliente([FromBody] ClienteDTO clienteDTO) 
@@ -68,7 +60,8 @@ namespace ClientManagerBackend.Api.Controllers
             return await _clienteServico.AtualizarClienteAsync(clienteDTO);
         }
 
-        [HttpDelete("{cpf}")]
+        [HttpDelete]
+        [Route("RemoverCliente/{cpf}")]
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(StatusResponseDTO), StatusCodes.Status404NotFound)]
         public async Task<StatusResponseDTO> RemoverCliente(string cpf) 
