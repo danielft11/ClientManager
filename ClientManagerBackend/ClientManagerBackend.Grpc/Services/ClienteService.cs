@@ -23,7 +23,7 @@ namespace ClientManagerBackend.Grpc
 
         public override async Task GetClientesByStream(GetClientesRequest request, IServerStreamWriter<ClienteLookupModel> responseStream, ServerCallContext context)
         {
-            var clientes = await _clienteRepositorio.ObterClientesAsync();
+            var clientes = await _clienteRepositorio.GetCustomersAsync();
 
             var clientesLookup = clientes.ToClientesLookupList();
 
@@ -48,7 +48,7 @@ namespace ClientManagerBackend.Grpc
                 Nascimento = DateTime.Now
             };
 
-            _clienteRepositorio.CadastrarClienteAsync(cliente);
+            _clienteRepositorio.AddCustomerAsync(cliente);
 
             return Task.FromResult(new AddClienteResponse
             {

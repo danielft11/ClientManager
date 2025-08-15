@@ -21,19 +21,19 @@ namespace ClientManagerBackend.Aplicacao.Servicos
 
         public async Task<IList<ClienteDTO>> ObterClientesAsync()
         {
-            var clientes = await _clienteRepositorio.ObterClientesAsync();
+            var clientes = await _clienteRepositorio.GetCustomersAsync();
             return _mapper.Map<List<ClienteDTO>>(clientes);
         }
 
         public async Task<ClienteDTO> ObterClientePeloCPF(string cpf)
         {
-            var cliente = await _clienteRepositorio.ObterClientePeloCPF(cpf);
+            var cliente = await _clienteRepositorio.GetCustomerByCpfAsync(cpf);
             return _mapper.Map<ClienteDTO>(cliente);
         }
 
         public async Task<StatusResponseDTO> CadastrarClienteAsync(ClienteDTO clienteDTO)
         {
-            var clienteJaExiste = await _clienteRepositorio.ObterClientePeloCPF(clienteDTO.Cpf);
+            var clienteJaExiste = await _clienteRepositorio.GetCustomerByCpfAsync(clienteDTO.Cpf);
 
             if (clienteJaExiste is not null)
                 return new StatusResponseDTO()
@@ -44,7 +44,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
 
             var cliente = _mapper.Map<Cliente>(clienteDTO);
 
-            await _clienteRepositorio.CadastrarClienteAsync(cliente);
+            await _clienteRepositorio.AddCustomerAsync(cliente);
 
             return new StatusResponseDTO()
             {
@@ -55,7 +55,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
 
         public async Task<StatusResponseDTO> AtualizarClienteAsync(ClienteDTO clienteDTO)
         {
-            var cliente = await _clienteRepositorio.ObterClientePeloCPF(clienteDTO.Cpf);
+            var cliente = await _clienteRepositorio.GetCustomerByCpfAsync(clienteDTO.Cpf);
 
             if (cliente is null)
                 return new StatusResponseDTO()
@@ -66,7 +66,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
 
             var clienteAlterar = _mapper.Map<Cliente>(clienteDTO);
 
-            await _clienteRepositorio.AtualizarClienteAsync(clienteAlterar);
+            await _clienteRepositorio.UpdateCustomerAsync(clienteAlterar);
 
             return new StatusResponseDTO()
             {
@@ -77,7 +77,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
 
         public async Task<StatusResponseDTO> DeletarClienteAsync(string cpf)
         {
-            var cliente = await _clienteRepositorio.ObterClientePeloCPF(cpf);
+            var cliente = await _clienteRepositorio.GetCustomerByCpfAsync(cpf);
 
             if (cliente is null)
                 return new StatusResponseDTO()
@@ -86,7 +86,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
                     Mensagem = "Nenhum cliente com este CPF foi encontrado na nossa base de dados."
                 };
 
-            await _clienteRepositorio.DeletarClienteAsync(cliente);
+            await _clienteRepositorio.DeleteCustomerAsync(cliente);
 
             return new StatusResponseDTO()
             {

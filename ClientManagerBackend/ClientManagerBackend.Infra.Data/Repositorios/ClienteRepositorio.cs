@@ -9,24 +9,24 @@ namespace ClientManagerBackend.Infra.Data.Repositorios
 {
     public class ClienteRepositorio : IClienteRepositorio
     {
-        private readonly ClientManagerContext _contexto;
+        private readonly IClientManagerContext _contexto;
 
-        public ClienteRepositorio(ClientManagerContext contexto) 
+        public ClienteRepositorio(IClientManagerContext contexto) 
         {
             _contexto = contexto;
         }
 
-        public async Task<IList<Cliente>> ObterClientesAsync()
+        public async Task<IList<Cliente>> GetCustomersAsync()
         {
             return await _contexto.Clientes.ToListAsync();
         }
         
-        public async Task<Cliente> ObterClientePeloCPF(string cpf)
+        public async Task<Cliente> GetCustomerByCpfAsync(string cpf)
         {
             return await _contexto.Clientes.FirstOrDefaultAsync(c => c.Cpf.Equals(cpf));
         }
 
-        public async Task<Cliente> CadastrarClienteAsync(Cliente cliente)
+        public async Task<Cliente> AddCustomerAsync(Cliente cliente)
         {
             _contexto.Clientes.Add(cliente);
             await _contexto.SaveChangesAsync();
@@ -34,7 +34,7 @@ namespace ClientManagerBackend.Infra.Data.Repositorios
             return cliente;
         }
 
-        public async Task<Cliente> AtualizarClienteAsync(Cliente cliente)
+        public async Task<Cliente> UpdateCustomerAsync(Cliente cliente)
         {
             _contexto.Clientes.Update(cliente);
             await _contexto.SaveChangesAsync();
@@ -42,12 +42,10 @@ namespace ClientManagerBackend.Infra.Data.Repositorios
             return cliente;
         }
         
-        public async Task<Cliente> DeletarClienteAsync(Cliente cliente)
+        public async Task DeleteCustomerAsync(Cliente cliente)
         {
             _contexto.Clientes.Remove(cliente);
             await _contexto.SaveChangesAsync();
-
-            return cliente;
         }
     
     }

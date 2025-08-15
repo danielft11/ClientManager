@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClientManagerBackend.Infra.Data.Contexto
 {
-    public class ClientManagerContext : DbContext
+    public class ClientManagerContext : DbContext, IClientManagerContext
     {
         public DbSet<Cliente> Clientes { get; set; }
 
