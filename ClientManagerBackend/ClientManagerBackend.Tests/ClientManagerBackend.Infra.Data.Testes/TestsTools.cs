@@ -1,11 +1,9 @@
-﻿using ClientManagerBackend.Dominio.Entidades;
+﻿using ClientManagerBackend.Dominio.Entities;
+using ClientManagerBackend.Dominio.ValueObjects;
 using ClientManagerBackend.Infra.Data.Contexto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes
 {
@@ -17,7 +15,7 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            var clientes = CriarClientes();
+            var clientes = CreateCustomers();
 
             var context = new ClientManagerContext(options);
             context.Clientes.AddRange(clientes);
@@ -26,42 +24,17 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes
             return context;
         }
 
-        public static Cliente CreateClient() 
+        public static Cliente CreateCustomer() 
         {
-            return new Cliente
-            {
-                Id = 3,
-                Nome = "João da Silva",
-                Cpf = "12345678900",
-                Telefone = "(31) 99999-9999",
-                Email = "joaosilva@teste.com",
-                Nascimento = new DateTime(1985, 7, 3)
-            };
+            return new Cliente(3, "João da Silva", "12345678900", "(31) 99999-9999", new EmailVO("joaosilva@teste.com"), new DateTime(1985, 7, 3));
         }
 
-        public static List<Cliente> CriarClientes() 
+        public static List<Cliente> CreateCustomers() 
         {
             return new List<Cliente>
             {
-                new Cliente 
-                { 
-                    Id = 1, 
-                    Nome = "José Moreira Costa", 
-                    Cpf = "12345678911",
-                    Telefone = "(31) 88888-8888",
-                    Email = "josemoreira@teste.com",
-                    Nascimento = new DateTime(1988, 12, 3)
-                },
-                new Cliente 
-                { 
-                    Id = 2, 
-                    Nome = "Maria Cândida Teixeira",
-                    Cpf = "12345678911",
-                    Telefone = "(31) 77777-7777",
-                    Email = "mariacandida@teste.com",
-                    Nascimento = new DateTime(1980, 2, 15)
-                }
-
+                new(1, "José Moreira Costa", "12345678911", "(31) 88888-8888", new EmailVO("josemoreira@teste.com"), new DateTime(1988, 12, 3)), 
+                new(2, "Maria Cândida Teixeira", "12345678911", "(31) 77777-7777", new EmailVO("mariacandida@teste.com"), new DateTime(1980, 2, 15)) 
             };
         }
 

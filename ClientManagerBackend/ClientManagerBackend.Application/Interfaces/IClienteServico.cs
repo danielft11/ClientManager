@@ -6,13 +6,13 @@ namespace ClientManagerBackend.Aplicacao.Interfaces
 {
     public interface IClienteServico
     {
-        Task<IList<ClienteDTO>> ObterClientesAsync();
+        Task<IList<ClienteDTO>> GetCustomersAsync();
 
-        Task<ClienteDTO> ObterClientePeloCPF(string cpf);
+        Task<ClienteDTO> GetCustomerByCpfAsync(string cpf);
 
-        Task<StatusResponseDTO> CadastrarClienteAsync(ClienteDTO cliente);
+        Task<StatusResponseDTO> AddCustomerAsync(ClienteDTO cliente);
 
-        Task<StatusResponseDTO> AtualizarClienteAsync(ClienteDTO cliente);
+        Task<StatusResponseDTO> UpdateCustomerAsync(ClienteDTO cliente);
 
         Task<StatusResponseDTO> DeletarClienteAsync(string cpf);
     }

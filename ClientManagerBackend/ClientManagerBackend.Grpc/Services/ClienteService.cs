@@ -1,5 +1,5 @@
 using ClientManagerBackend.Dominio.Interfaces;
-using Cli = ClientManagerBackend.Dominio.Entidades.Cliente;
+using Cli = ClientManagerBackend.Dominio.Entities.Cliente;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using ClientManagerBackend.Grpc.Extensions;
 using System.Linq;
+using ClientManagerBackend.Dominio.ValueObjects;
 
 namespace ClientManagerBackend.Grpc
 {
@@ -39,15 +40,8 @@ namespace ClientManagerBackend.Grpc
 
         public override Task<AddClienteResponse> AddCliente(AddClienteRequest request, ServerCallContext context)
         {
-            var cliente = new Cli
-            {
-                Nome = request.Nome,
-                Cpf = request.Cpf,
-                Telefone = request.Telefone,
-                Email = request.Email,
-                Nascimento = DateTime.Now
-            };
-
+            var cliente = new Cli(request.Nome, request.Cpf, request.Telefone, new EmailVO(request.Email), DateTime.Now);
+ 
             _clienteRepositorio.AddCustomerAsync(cliente);
 
             return Task.FromResult(new AddClienteResponse

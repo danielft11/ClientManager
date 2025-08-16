@@ -1,7 +1,7 @@
-﻿using ClientManagerBackend.Dominio.Entidades;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
+using ClientManagerBackend.Dominio.Entities;
 
 namespace ClientManagerBackend.Infra.Data.Contexto
 {

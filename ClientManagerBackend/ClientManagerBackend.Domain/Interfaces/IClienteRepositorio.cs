@@ -1,4 +1,4 @@
-﻿using ClientManagerBackend.Dominio.Entidades;
+﻿using ClientManagerBackend.Dominio.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

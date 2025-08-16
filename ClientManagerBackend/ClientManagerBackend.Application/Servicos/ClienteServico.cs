@@ -1,9 +1,10 @@
-﻿using AutoMapper;
-using ClientManagerBackend.Aplicacao.DTOs;
+﻿using ClientManagerBackend.Aplicacao.DTOs;
 using ClientManagerBackend.Aplicacao.Interfaces;
-using ClientManagerBackend.Dominio.Entidades;
+using ClientManagerBackend.Dominio.Entities;
 using ClientManagerBackend.Dominio.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClientManagerBackend.Aplicacao.Servicos
@@ -11,41 +12,54 @@ namespace ClientManagerBackend.Aplicacao.Servicos
     public class ClienteServico : IClienteServico
     {
         private readonly IClienteRepositorio _clienteRepositorio;
-        private readonly IMapper _mapper;
 
-        public ClienteServico(IClienteRepositorio clienteRepositorio, IMapper mapper)
+        public ClienteServico(IClienteRepositorio clienteRepositorio)
         {
             _clienteRepositorio = clienteRepositorio;
-            _mapper = mapper;
         }
 
-        public async Task<IList<ClienteDTO>> ObterClientesAsync()
+        public async Task<IList<ClienteDTO>> GetCustomersAsync()
         {
             var clientes = await _clienteRepositorio.GetCustomersAsync();
-            return _mapper.Map<List<ClienteDTO>>(clientes);
+  
+            var customersDTO = clientes.Select(client => CustomerToDTO(client)).ToList();
+
+            return customersDTO;
         }
 
-        public async Task<ClienteDTO> ObterClientePeloCPF(string cpf)
+        public async Task<ClienteDTO> GetCustomerByCpfAsync(string cpf)
         {
             var cliente = await _clienteRepositorio.GetCustomerByCpfAsync(cpf);
-            return _mapper.Map<ClienteDTO>(cliente);
+            
+            return CustomerToDTO(cliente);
         }
 
-        public async Task<StatusResponseDTO> CadastrarClienteAsync(ClienteDTO clienteDTO)
+        public async Task<StatusResponseDTO> AddCustomerAsync(ClienteDTO clienteDTO)
         {
             var clienteJaExiste = await _clienteRepositorio.GetCustomerByCpfAsync(clienteDTO.Cpf);
 
-            if (clienteJaExiste is not null)
+            try
+            {
+                if (clienteJaExiste is not null)
+                    return new StatusResponseDTO()
+                    {
+                        Status = "Erro",
+                        Mensagem = "Já existe um cliente no banco de dados cadastrado com este Cpf."
+                    };
+
+                var cliente = DtoToCustomer(clienteDTO);
+
+                await _clienteRepositorio.AddCustomerAsync(cliente);
+            }
+            catch (Exception ex)
+            {
                 return new StatusResponseDTO()
                 {
                     Status = "Erro",
-                    Mensagem = "Já existe um cliente no banco de dados cadastrado com este CPF."
+                    Mensagem = $"Falha ao criar o cliente: {ex.Message}"
                 };
-
-            var cliente = _mapper.Map<Cliente>(clienteDTO);
-
-            await _clienteRepositorio.AddCustomerAsync(cliente);
-
+            }
+            
             return new StatusResponseDTO()
             {
                 Status = "Sucesso",
@@ -53,21 +67,36 @@ namespace ClientManagerBackend.Aplicacao.Servicos
             };
         }
 
-        public async Task<StatusResponseDTO> AtualizarClienteAsync(ClienteDTO clienteDTO)
+        public async Task<StatusResponseDTO> UpdateCustomerAsync(ClienteDTO clienteDTO)
         {
-            var cliente = await _clienteRepositorio.GetCustomerByCpfAsync(clienteDTO.Cpf);
+            try
+            {
+                var cliente = await _clienteRepositorio.GetCustomerByCpfAsync(clienteDTO.Cpf);
+                if (cliente is null)
+                    return new StatusResponseDTO()
+                    {
+                        Status = "Error",
+                        Mensagem = "Nenhum cliente com este Cpf foi encontrado na nossa base de dados."
+                    };
 
-            if (cliente is null)
+                cliente.UpdateModel(
+                nome: clienteDTO.Nome,
+                cpf: clienteDTO.Cpf,
+                telefone: clienteDTO.Telefone,
+                email: new Dominio.ValueObjects.EmailVO(clienteDTO.Email),
+                nascimento: clienteDTO.Nascimento);
+
+                await _clienteRepositorio.UpdateCustomerAsync(cliente);
+            }
+            catch (Exception ex)
+            {
                 return new StatusResponseDTO()
                 {
                     Status = "Erro",
-                    Mensagem = "Nenhum cliente com este CPF foi encontrado na nossa base de dados."
+                    Mensagem = $"Falha ao atualizar o cliente: {ex.Message}"
                 };
-
-            var clienteAlterar = _mapper.Map<Cliente>(clienteDTO);
-
-            await _clienteRepositorio.UpdateCustomerAsync(clienteAlterar);
-
+            }
+            
             return new StatusResponseDTO()
             {
                 Status = "Sucesso!",
@@ -83,7 +112,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
                 return new StatusResponseDTO()
                 {
                     Status = "Erro",
-                    Mensagem = "Nenhum cliente com este CPF foi encontrado na nossa base de dados."
+                    Mensagem = "Nenhum cliente com este CPF foi encontrado."
                 };
 
             await _clienteRepositorio.DeleteCustomerAsync(cliente);
@@ -92,6 +121,31 @@ namespace ClientManagerBackend.Aplicacao.Servicos
             {
                 Status = "Sucesso!",
                 Mensagem = "Cliente removido com sucesso."
+            };
+        }
+
+        private Cliente DtoToCustomer(ClienteDTO clienteDTO) 
+        {
+            return new Cliente(
+                nome: clienteDTO.Nome,
+                cpf: clienteDTO.Cpf,
+                telefone: clienteDTO.Telefone,
+                email: new Dominio.ValueObjects.EmailVO(clienteDTO.Email),
+                nascimento: clienteDTO.Nascimento
+            );
+        }
+
+        public ClienteDTO CustomerToDTO(Cliente cliente)
+        {
+            if (cliente == null) return null;
+
+            return new ClienteDTO
+            {
+                Nome = cliente.Nome,
+                Cpf = cliente.Cpf,
+                Telefone = cliente.Telefone,
+                Email = cliente.Email.Address, 
+                Nascimento = cliente.Nascimento
             };
         }
 

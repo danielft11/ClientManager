@@ -1,4 +1,4 @@
-﻿using ClientManagerBackend.Dominio.Entidades;
+﻿using ClientManagerBackend.Dominio.Entities;
 using ClientManagerBackend.Infra.Data.Mapeamentos;
 using Microsoft.EntityFrameworkCore;
 

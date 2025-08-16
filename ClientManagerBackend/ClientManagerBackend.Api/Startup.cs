@@ -54,7 +54,6 @@ namespace ClientManagerBackend.Api
 
             services.AdicionarServicos();
 
-            services.AdicionarAutoMapper();
             #endregion
 
             #region Swagger

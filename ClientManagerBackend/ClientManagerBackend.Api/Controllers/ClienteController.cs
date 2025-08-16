@@ -27,9 +27,11 @@ namespace ClientManagerBackend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IEnumerable<ClienteDTO>> ObterClientes() 
+        public async Task<IActionResult> ObterClientes() 
         {
-            return await _clienteServico.ObterClientesAsync();
+            var customers = await _clienteServico.GetCustomersAsync();
+
+            return Ok(customers);
         }
 
         [HttpGet]
@@ -37,27 +39,37 @@ namespace ClientManagerBackend.Api.Controllers
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ClienteDTO> ObterClientePeloCPF(string cpf) 
+        public async Task<IActionResult> ObterClientePeloCPF(string cpf) 
         {
-            return await _clienteServico.ObterClientePeloCPF(cpf);
+            var customer = await _clienteServico.GetCustomerByCpfAsync(cpf);
+            
+            return Ok(customer);
         }
 
         [HttpPost]
         [Route("CadastrarCliente")]
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(StatusResponseDTO), StatusCodes.Status400BadRequest)]
-        public async Task<StatusResponseDTO> CadastrarCliente([FromBody] ClienteDTO clienteDTO)
+        public async Task<IActionResult> CadastrarCliente([FromBody] ClienteDTO clienteDTO)
         {
-            return await _clienteServico.CadastrarClienteAsync(clienteDTO);
+            var response = await _clienteServico.AddCustomerAsync(clienteDTO);
+            if (response.Status == "Erro")
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
         [HttpPut]
         [Route("AtualizarCliente")]
         [ProducesResponseType(typeof(ClienteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(StatusResponseDTO), StatusCodes.Status404NotFound)]
-        public async Task<StatusResponseDTO> AtualizarCliente([FromBody] ClienteDTO clienteDTO) 
+        public async Task<IActionResult> AtualizarCliente([FromBody] ClienteDTO clienteDTO) 
         {
-            return await _clienteServico.AtualizarClienteAsync(clienteDTO);
+           var response = await _clienteServico.UpdateCustomerAsync(clienteDTO);
+           if (response.Status == "Erro")
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
         [HttpDelete]

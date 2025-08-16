@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using cli = ClientManagerBackend.Dominio.Entidades.Cliente;
+using cli = ClientManagerBackend.Dominio.Entities.Cliente;
 
 namespace ClientManagerBackend.Grpc.Extensions
 {
@@ -16,7 +16,7 @@ namespace ClientManagerBackend.Grpc.Extensions
                     Nome = cliente.Nome,
                     Cpf = cliente.Cpf,
                     Telefone = cliente.Telefone,
-                    Email = cliente.Email,
+                    Email = cliente.Email.Address,
                     DataNascimento = cliente.Nascimento.ToString()
                 });
             }

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <ProjectReference Include="..\ClientManagerBackend.Domain\ClientManagerBackend.Dominio.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClientManagerBackend.Domain\ClientManagerBackend.Dominio.csproj" />
+    <Folder Include="Automapper\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 ﻿using ClientManagerBackend.Dominio.Interfaces;
+using ClientManagerBackend.Dominio.ValueObjects;
 using ClientManagerBackend.Infra.Data.Repositorios;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -39,7 +41,7 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
         public async Task AddCustomerAsync_ShouldReturn_NewCustomerWithTheSameData()
         {
             // Arrange
-            var customer = TestsTools.CreateClient();
+            var customer = TestsTools.CreateCustomer();
 
             // Act
             var registeredCustomer = await _clienteRepositorio.AddCustomerAsync(customer);
@@ -53,11 +55,12 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
         public async Task UpdateCustomerAsync_ShouldReturn_CustomerUpdated()
         {
             // Arrange
-            var customer = TestsTools.CreateClient();
+            var customer = TestsTools.CreateCustomer();
 
             var registeredCustomer = await _clienteRepositorio.AddCustomerAsync(customer);
-            registeredCustomer.Cpf = "10065432100"; 
 
+            registeredCustomer.UpdateModel("", "10065432100", "", new EmailVO("joaosilvanovoEmail@teste.com"), new DateTime(1985, 7, 3));
+             
             // Act
             var updatedCustomer = await _clienteRepositorio.UpdateCustomerAsync(registeredCustomer);
 
@@ -65,13 +68,14 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
             var customerFromDb = await _clienteRepositorio.GetCustomerByCpfAsync("10065432100");
             Assert.NotNull(customerFromDb);
             Assert.Equal(updatedCustomer.Id, customerFromDb.Id);
+            Assert.Equal("joaosilvanovoEmail@teste.com", customerFromDb.Email.Address);
         }
 
         [Fact]
         public async Task DeleteCustomerAsync_ShouldReturn_Void()
         {
             // Arrange
-            var customer = TestsTools.CreateClient();
+            var customer = TestsTools.CreateCustomer();
 
             var registeredCustomer = await _clienteRepositorio.AddCustomerAsync(customer);
 

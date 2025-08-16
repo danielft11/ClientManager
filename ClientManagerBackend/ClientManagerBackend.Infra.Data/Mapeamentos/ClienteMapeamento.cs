@@ -1,8 +1,7 @@
-﻿using ClientManagerBackend.Dominio.Entidades;
+﻿using ClientManagerBackend.Dominio.Entities;
+using ClientManagerBackend.Dominio.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
 
 namespace ClientManagerBackend.Infra.Data.Mapeamentos
 {
@@ -29,6 +28,9 @@ namespace ClientManagerBackend.Infra.Data.Mapeamentos
 
             builder
               .Property(c => c.Email)
+              .HasConversion(
+                    emailVO => emailVO.Address, // do VO para a coluna do banco
+                    emailFromDB => new EmailVO(emailFromDB)) // do valor do banco para o VO
               .HasMaxLength(250);
 
             builder
