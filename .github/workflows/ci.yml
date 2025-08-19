@@ -32,6 +32,12 @@ jobs:
           /p:CoverletOutputFormat=cobertura \
           /p:CoverletOutput=ClientManagerBackend/Testes/TestResults/coverage.cobertura.xml
 
+      - name: Install ReportGenerator # Instala a ferramenta ReportGenerator para gerar relatórios de cobertura de código.
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Add dotnet tools to PATH # Adiciona o diretório de ferramentas do .NET ao PATH do runner.
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
       - name: Generate coverage report # Gera o relatório de cobertura de código.
         run: |
           reportgenerator \
