@@ -6,27 +6,41 @@ on:
       - master
 
 jobs:
-    build-and-tests:
-      runs-on: ubuntu-latest
-      steps:
-       - name: Checkout repository # Faz o GitHub Actions baixar o código do repositório no runner.
-         uses: actions/checkout@v3
+  build-and-tests:
+    runs-on: ubuntu-latest
 
-       - name: Setup .NET # Instala o .NET 7 no runner.
-         uses: actions/setup-dotnet@v3
-         with:
-           dotnet-version: '7.0.x'
+    steps:
+      - name: Checkout repository # Faz o GitHub Actions baixar o código do repositório no runner.
+        uses: actions/checkout@v3
 
-       - name: Restore dependencies # Restaura os pacotes NuGet do seu projeto.
-         run: dotnet restore ClientManagerBackend/ClientManagerBackend.sln
+      - name: Setup .NET # Instala o .NET 7 no runner.
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
 
-       - name: Build # Compila o projeto. --no-restore evita restaurar pacotes novamente, já que fizemos antes.
-         run: dotnet build ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-restore
+      - name: Restore dependencies # Restaura os pacotes NuGet do seu projeto.
+        run: dotnet restore ClientManagerBackend/ClientManagerBackend.sln
 
-       - name: Run tests with coverage #Executa os testes unitários. --no-build evita recompilar, usando o build anterior. 
-         run: dotnet test ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      - name: Build # Compila o projeto. --no-restore evita restaurar pacotes novamente, já que fizemos antes.
+        run: dotnet build ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-restore
 
-       - name: Publish code coverage results # Publica os resultados de cobertura de código.
-         uses: codecov/codecov-action@v3
-         with:
-           files: ClientManagerBackend/ClientManagerBackend.Tests/TestResults/coverage.cobertura.xml
+      - name: Run tests with coverage
+        run: |
+          dotnet test ClientManagerBackend/ClientManagerBackend.Tests/ClientManagerBackend.Tests.csproj \
+            --configuration Release \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutput=ClientManagerBackend/Testes/TestResults/coverage.cobertura.xml
+
+      - name: Generate coverage report # Gera o relatório de cobertura de código.
+        run: |
+          reportgenerator \
+            -reports:ClientManagerBackend/Testes/TestResults/coverage.cobertura.xml \
+            -targetdir:ClientManagerBackend/Testes/TestResults/CoverageReport \
+            -reporttypes:Html
+
+      - name: Upload coverage report # Faz o upload do relatório de cobertura como um artefato do workflow.
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ClientManagerBackend/Testes/TestResults/CoverageReport
