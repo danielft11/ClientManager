@@ -24,13 +24,13 @@ jobs:
       - name: Build # Compila o projeto. --no-restore evita restaurar pacotes novamente, já que fizemos antes.
         run: dotnet build ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-restore
 
-      - name: Run tests with coverage # Executa os testes do projeto e coleta a cobertura de código.
+      - name: Run tests with coverage
         run: |
-            dotnet test ClientManagerBackend/ClientManagerBackend.Tests/ClientManagerBackend.Tests.csproj \
-            --configuration Release \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=ClientManagerBackend/Testes/TestResults/coverage.cobertura.xml
+          dotnet test ClientManagerBackend/ClientManagerBackend.Tests/ClientManagerBackend.Tests.csproj \
+          --configuration Release \
+          /p:CollectCoverage=true \
+          /p:CoverletOutputFormat=cobertura \
+          /p:CoverletOutput=ClientManagerBackend/Testes/TestResults/coverage.cobertura.xml
 
       - name: Generate coverage report # Gera o relatório de cobertura de código.
         run: |
