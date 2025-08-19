@@ -41,9 +41,8 @@ jobs:
       - name: Generate coverage report # Gera o relatório de cobertura de código.
         run: |
           reportgenerator \
-            -reports:ClientManagerBackend/ClientManagerBackend.Tests/TestResults/coverage.cobertura.xml \
-            -targetdir:ClientManagerBackend/ClientManagerBackend.Tests/TestResults/CoverageReport \
-            -reporttypes:Html
+            -reportgenerator -reports:ClientManagerBackend/ClientManagerBackend.Tests/TestResults/**/*.cobertura.xml 
+            -targetdir:ClientManagerBackend/ClientManagerBackend.Tests/TestResults/CoverageReport -reporttypes:Html
 
       - name: Upload coverage report # Faz o upload do relatório de cobertura como um artefato do workflow.
         uses: actions/upload-artifact@v4
