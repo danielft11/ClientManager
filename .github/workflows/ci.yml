@@ -23,5 +23,10 @@ jobs:
        - name: Build # Compila o projeto. --no-restore evita restaurar pacotes novamente, já que fizemos antes.
          run: dotnet build ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-restore
 
-       - name: Run tests #Executa os testes unitários. --no-build evita recompilar, usando o build anterior. --verbosity normal mostra o resultado detalhado dos testes.
-         run: dotnet test ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-build --verbosity normal
+       - name: Run tests with coverage #Executa os testes unitários. --no-build evita recompilar, usando o build anterior. 
+         run: dotnet test ClientManagerBackend/ClientManagerBackend.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+
+       - name: Publish code coverage results # Publica os resultados de cobertura de código.
+         uses: codecov/codecov-action@v3
+         with:
+           files: ClientManagerBackend/ClientManagerBackend.Tests/TestResults/coverage.cobertura.xml
