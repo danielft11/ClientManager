@@ -26,7 +26,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          dotnet test ClientManagerBackend/ClientManagerBackend.Tests/ClientManagerBackend.Tests.csproj \
+          dotnet test ClientManagerBackend/ClientManagerBackend.Tests/ClientManagerBackend.Testes.csproj \
           --configuration Release \
           /p:CollectCoverage=true \
           /p:CoverletOutputFormat=cobertura \
