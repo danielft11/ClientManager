@@ -30,7 +30,7 @@ jobs:
           --configuration Release \
           /p:CollectCoverage=true \
           /p:CoverletOutputFormat=cobertura \
-          /p:CoverletOutput=ClientManagerBackend/Testes/TestResults/coverage.cobertura.xml
+          /p:CoverletOutput=ClientManagerBackend/ClientManagerBackend.Tests/TestResults/coverage.cobertura.xml
 
       - name: Install ReportGenerator # Instala a ferramenta ReportGenerator para gerar relatórios de cobertura de código.
         run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.12
