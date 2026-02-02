@@ -44,7 +44,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
                     return new StatusResponseDTO()
                     {
                         Status = "Erro",
-                        Mensagem = "Já existe um cliente no banco de dados cadastrado com este Cpf."
+                        Mensagem = "Já existe um cliente no banco de dados cadastrado com este CPF."
                     };
 
                 var cliente = DtoToCustomer(clienteDTO);
@@ -76,7 +76,7 @@ namespace ClientManagerBackend.Aplicacao.Servicos
                     return new StatusResponseDTO()
                     {
                         Status = "Error",
-                        Mensagem = "Nenhum cliente com este Cpf foi encontrado na nossa base de dados."
+                        Mensagem = "Nenhum cliente com este CPF foi encontrado na nossa base de dados."
                     };
 
                 cliente.UpdateModel(
