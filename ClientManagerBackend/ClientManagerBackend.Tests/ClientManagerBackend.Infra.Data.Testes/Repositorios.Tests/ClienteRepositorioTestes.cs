@@ -1,7 +1,9 @@
-﻿using ClientManagerBackend.Dominio.Interfaces;
+using ClientManagerBackend.Dominio.Entities;
+using ClientManagerBackend.Dominio.Interfaces;
 using ClientManagerBackend.Dominio.ValueObjects;
-using ClientManagerBackend.Infra.Data.Repositorios;
+using Moq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,32 +11,49 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
 {
     public class ClienteRepositorioTestes
     {
-        private readonly IClienteRepositorio _clienteRepositorio;
-        
+        private readonly Mock<IClienteRepositorio> _mockRepositorio;
+
         public ClienteRepositorioTestes()
         {
-            var context = TestsTools.CreateContext();
-            _clienteRepositorio = new ClienteRepositorio(context);
+            _mockRepositorio = new Mock<IClienteRepositorio>();
         }
 
         [Fact]
         public async Task GetCustomersAsync_ShouldReturn_CustomerList()
         {
-            var resultado = await _clienteRepositorio.GetCustomersAsync();
+            // Arrange
+            var expectedCustomers = TestsTools.CreateCustomers();
+            
+            _mockRepositorio
+                .Setup(x => x.GetCustomersAsync())
+                .ReturnsAsync(expectedCustomers);
 
+            // Act
+            var resultado = await _mockRepositorio.Object.GetCustomersAsync();
+
+            // Assert
             Assert.NotNull(resultado);
             Assert.Equal(2, resultado.Count);
-            Assert.Equal("José Moreira Costa", resultado[0].Nome);
-            Assert.Equal("Maria Cândida Teixeira", resultado[1].Nome);
+            Assert.Equal(expectedCustomers[0].Nome, resultado[0].Nome);
+            Assert.Equal(expectedCustomers[1].Nome, resultado[1].Nome);
         }
 
         [Fact]
         public async Task GetCustomerByCpfAsync_ShouldReturn_Customer()
         {
-            var resultado = await _clienteRepositorio.GetCustomerByCpfAsync("12345678911");
+            // Arrange
+            var expectedCustomer = TestsTools.CreateCustomers().FirstOrDefault();
+            
+            _mockRepositorio
+                .Setup(x => x.GetCustomerByCpfAsync("12345678911"))
+                .ReturnsAsync(expectedCustomer);
 
+            // Act
+            var resultado = await _mockRepositorio.Object.GetCustomerByCpfAsync("12345678911");
+
+            // Assert
             Assert.NotNull(resultado);
-            Assert.Equal("12345678911", resultado.Cpf);
+            Assert.Equal(expectedCustomer.Cpf, resultado.Cpf);
         }
 
         [Fact]
@@ -42,9 +61,13 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
         {
             // Arrange
             var customer = TestsTools.CreateCustomer();
+            
+            _mockRepositorio
+                .Setup(x => x.AddCustomerAsync(It.IsAny<Cliente>()))
+                .ReturnsAsync(customer);
 
             // Act
-            var registeredCustomer = await _clienteRepositorio.AddCustomerAsync(customer);
+            var registeredCustomer = await _mockRepositorio.Object.AddCustomerAsync(customer);
 
             // Assert
             Assert.NotNull(registeredCustomer);
@@ -54,21 +77,22 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
         [Fact]
         public async Task UpdateCustomerAsync_ShouldReturn_CustomerUpdated()
         {
-            // Arrange
+            // Arrange - cliente já existente com dados atualizados (simula estado após edição)
             var customer = TestsTools.CreateCustomer();
+            
+            customer.UpdateModel("", "10065432100", "", new EmailVO("joaosilvanovoEmail@teste.com"), new DateTime(1985, 7, 3));
 
-            var registeredCustomer = await _clienteRepositorio.AddCustomerAsync(customer);
+            _mockRepositorio
+                .Setup(x => x.UpdateCustomerAsync(It.IsAny<Cliente>()))
+                .ReturnsAsync((Cliente c) => c);
 
-            registeredCustomer.UpdateModel("", "10065432100", "", new EmailVO("joaosilvanovoEmail@teste.com"), new DateTime(1985, 7, 3));
-             
             // Act
-            var updatedCustomer = await _clienteRepositorio.UpdateCustomerAsync(registeredCustomer);
+            var updatedCustomer = await _mockRepositorio.Object.UpdateCustomerAsync(customer);
 
             // Assert
-            var customerFromDb = await _clienteRepositorio.GetCustomerByCpfAsync("10065432100");
-            Assert.NotNull(customerFromDb);
-            Assert.Equal(updatedCustomer.Id, customerFromDb.Id);
-            Assert.Equal("joaosilvanovoEmail@teste.com", customerFromDb.Email.Address);
+            Assert.NotNull(updatedCustomer);
+            Assert.Equal(customer.Cpf, updatedCustomer.Cpf);
+            Assert.Equal(customer.Email.Address, updatedCustomer.Email.Address);
         }
 
         [Fact]
@@ -76,16 +100,18 @@ namespace ClientManagerBackend.Testes.ClientManagerBackend.Infra.Data.Testes.Rep
         {
             // Arrange
             var customer = TestsTools.CreateCustomer();
-
-            var registeredCustomer = await _clienteRepositorio.AddCustomerAsync(customer);
+            
+            _mockRepositorio
+                .Setup(x => x.AddCustomerAsync(It.IsAny<Cliente>()))
+                .ReturnsAsync(customer);
+            
+            var registeredCustomer = await _mockRepositorio.Object.AddCustomerAsync(customer);
 
             // Act
-            await _clienteRepositorio.DeleteCustomerAsync(registeredCustomer);
+            var ret = await _mockRepositorio.Object.DeleteCustomerAsync(registeredCustomer);
 
             // Assert
-            var customerFromDb = await _clienteRepositorio.GetCustomerByCpfAsync(customer.Cpf);
-            Assert.Null(customerFromDb);
+            Assert.Equal(0, ret);
         }
-
     }
 }

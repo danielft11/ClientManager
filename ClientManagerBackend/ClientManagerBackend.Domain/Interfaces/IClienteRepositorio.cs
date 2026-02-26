@@ -14,7 +14,7 @@ namespace ClientManagerBackend.Dominio.Interfaces
 
         Task<Cliente> UpdateCustomerAsync(Cliente cliente);
 
-        Task DeleteCustomerAsync(Cliente cliente);
+        Task<int> DeleteCustomerAsync(Cliente cliente);
     }
 
 }

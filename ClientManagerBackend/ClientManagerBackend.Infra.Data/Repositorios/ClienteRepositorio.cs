@@ -42,10 +42,11 @@ namespace ClientManagerBackend.Infra.Data.Repositorios
             return cliente;
         }
         
-        public async Task DeleteCustomerAsync(Cliente cliente)
+        public async Task<int> DeleteCustomerAsync(Cliente cliente)
         {
             _contexto.Clientes.Remove(cliente);
-            await _contexto.SaveChangesAsync();
+            
+            return await _contexto.SaveChangesAsync();
         }
     
     }
